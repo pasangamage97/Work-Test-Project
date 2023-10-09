@@ -1,4 +1,4 @@
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
   Checkbox,
@@ -9,7 +9,7 @@ import {
   Button,
   MenuItem,
 } from "@mui/material";
-import { Member } from "../types";
+import { GenderEnum, Member } from "../types";
 
 interface MemberFormProps {
   member?: Member;
@@ -18,10 +18,19 @@ interface MemberFormProps {
 
 const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
   const { register, handleSubmit, control, reset } = useForm<Member>({
-    defaultValues: member
+    defaultValues: member || {
+        firstName:"",
+        lastName:"",
+        dob:"2000-01-01",
+        feePaid:false,
+        gender:GenderEnum.other
+    },
   });
 
-  const onFormSubmit = (member:Member)=>{ onSubmit(member); reset();}
+  const onFormSubmit = (member: Member) => {
+    onSubmit(member);
+    reset();
+  };
 
   return (
     <>
@@ -56,16 +65,28 @@ const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
         />
         <FormControl fullWidth margin="normal">
           <InputLabel>Gender</InputLabel>
-          <Select label="Gender" {...register("gender")}>
-            <MenuItem value={"male"}>Male</MenuItem>
-            <MenuItem value={"female"}>Female</MenuItem>
-            <MenuItem value={"other"}>Other</MenuItem>
-          </Select>
+          <Controller
+            name="gender"
+            control={control}
+            render={({ field }) => (
+              <Select label="Gender" {...field}>
+                <MenuItem value={"male"}>Male</MenuItem>
+                <MenuItem value={"female"}>Female</MenuItem>
+                <MenuItem value={"other"}>Other</MenuItem>
+              </Select>
+            )}
+          />
         </FormControl>
-        <FormControlLabel
-          control={<Checkbox {...register("feePaid")} />}
-          label="Membership Fee Paid"
-        />
+        <Controller
+            name="feePaid"
+            control={control}
+            render={({ field }) => (
+                <FormControlLabel
+                control={<Checkbox {...field} checked={field.value} />}
+                label="Membership Fee Paid"
+              />
+            )}
+          />
         <Button type="submit" variant="contained" color="primary">
           {" "}
           Submit{" "}

@@ -2,8 +2,9 @@ import { useMemo } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { type MRT_ColumnDef } from "material-react-table";
 import { Member } from "../types";
+import { MenuItem } from "@mui/material";
 
-const MembersTable: React.FC<{ members: Member[] }> = ({ members }) => {
+const MembersTable: React.FC<{ members: Member[], openEditModal: (rowId:number)=>void }> = ({ members,openEditModal }) => {
   console.log(members);
   const columns = useMemo<MRT_ColumnDef<Member>[]>(
     () => [
@@ -37,7 +38,15 @@ const MembersTable: React.FC<{ members: Member[] }> = ({ members }) => {
     []
   );
 
-  return <MaterialReactTable columns={columns} data={members} />;
+  return <MaterialReactTable 
+  columns={columns} 
+  data={members} 
+  enableRowActions
+  renderRowActionMenuItems={({ row }) => [
+    <MenuItem key="edit" onClick={() => openEditModal(row.index)}>
+      Edit
+    </MenuItem>,
+  ]}/>;
 };
 
 export default MembersTable;
