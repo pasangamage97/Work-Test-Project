@@ -19,11 +19,11 @@ interface MemberFormProps {
 const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
   const { register, handleSubmit, control, reset } = useForm<Member>({
     defaultValues: member || {
-        firstName:"",
-        lastName:"",
-        dob:"2000-01-01",
-        feePaid:false,
-        gender:GenderEnum.other
+      firstName: "",
+      lastName: "",
+      dob: "2000-01-01",
+      feePaid: false,
+      gender: GenderEnum.other,
     },
   });
 
@@ -34,7 +34,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
 
   return (
     <>
-      <h2>Add Member Data</h2>
+      <h2>Member Data</h2>
       <form onSubmit={handleSubmit(onFormSubmit)}>
         <TextField
           label="First Name"
@@ -63,30 +63,30 @@ const MemberForm: React.FC<MemberFormProps> = ({ member, onSubmit }) => {
           fullWidth
           margin="normal"
         />
-        <FormControl fullWidth margin="normal">
-          <InputLabel>Gender</InputLabel>
-          <Controller
-            name="gender"
-            control={control}
-            render={({ field }) => (
+        <Controller
+          name="gender"
+          control={control}
+          render={({ field, fieldState }) => (
+            <FormControl fullWidth margin="normal" error={!!fieldState.error}>
+              <InputLabel>Gender</InputLabel>
               <Select label="Gender" {...field}>
                 <MenuItem value={"male"}>Male</MenuItem>
                 <MenuItem value={"female"}>Female</MenuItem>
                 <MenuItem value={"other"}>Other</MenuItem>
               </Select>
-            )}
-          />
-        </FormControl>
+            </FormControl>
+          )}
+        />
         <Controller
-            name="feePaid"
-            control={control}
-            render={({ field }) => (
-                <FormControlLabel
-                control={<Checkbox {...field} checked={field.value} />}
-                label="Membership Fee Paid"
-              />
-            )}
-          />
+          name="feePaid"
+          control={control}
+          render={({ field, fieldState }) => (
+            <FormControlLabel
+              control={<Checkbox {...field} checked={field.value} />}
+              label="Membership Fee Paid"
+            />
+          )}
+        />
         <Button type="submit" variant="contained" color="primary">
           {" "}
           Submit{" "}

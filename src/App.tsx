@@ -2,8 +2,9 @@ import { useState } from "react";
 import "./App.css";
 import MemberForm from "./Components/form-component";
 import MembersTable from "./Components/table-component";
-import { GenderEnum, Member } from "./types";
+import { Member } from "./types";
 import EditFormModal from "./Components/editModal";
+import { Grid } from "@mui/material";
 
 function App() {
   const [members, setMembers] = useState<Member[]>([]);
@@ -11,7 +12,6 @@ function App() {
   const [open, setOpen] = useState(false);
 
   const submitForm = (data: Member) => {
-    console.log(data);
     data.memberId = members.length + 1;
     setMembers([...members, data]);
   };
@@ -22,7 +22,6 @@ function App() {
   };
 
   const onMemberEdit = (data: Member) => {
-    console.log(data);
     setMembers(
       members.map((member) => {
         if (member.memberId == data.memberId) {
@@ -43,16 +42,27 @@ function App() {
 
   return (
     <div className="App">
-      <MemberForm onSubmit={submitForm} />
-      <MembersTable members={members} openEditModal={onEditModalOpen} />
-      {memberToEdit && (
-        <EditFormModal
-          member={memberToEdit}
-          onSubmit={onMemberEdit}
-          isOpen={open}
-          onCancel={onModalClose}
-        />
-      )}
+      <Grid container justifyContent="center" py="1.5rem" minHeight="100vh">
+        <Grid item xs={12} md={7} width="100%" marginBottom={4}>
+          <div>
+            <MemberForm onSubmit={submitForm} />
+          </div>
+        </Grid>
+        <Grid item xs={12} md={7} width="100%" marginBottom={4}>
+        <div>
+          <MembersTable members={members} openEditModal={onEditModalOpen} />
+        </div>
+        </Grid>
+
+        {memberToEdit && (
+          <EditFormModal
+            member={memberToEdit}
+            onSubmit={onMemberEdit}
+            isOpen={open}
+            onCancel={onModalClose}
+          />
+        )}
+      </Grid>
     </div>
   );
 }
